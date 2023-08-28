@@ -51,6 +51,8 @@ class Validator:
         if not self.df["META SKU"].gt(0).all():
             return False, "The column META SKU has 0 or negative values"
 
+        return True, "The column META SKU has the correct values"
+
     def validate_points_column(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
         if self.df["puntos"].isnull().sum() > 0:
@@ -68,6 +70,8 @@ class Validator:
         if not self.df["puntos"].gt(0).all():
             return False, "The column points has 0 or negative values"
 
+        return True, "The column points has the correct values"
+
     def validate_campaign_id_column(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
         if self.df["Campaign_ID"].isnull().sum() > 0:
@@ -80,6 +84,8 @@ class Validator:
         # Check if the column does not have empty values
         if self.df["Campaign_ID"].empty:
             return False, "The column Campaign_ID has empty values"
+
+        return True, "The column Campaign_ID has the correct values"
 
     def validate_challenge_type_column(self) -> Tuple[bool, str]:
         allowed_values = ["EXECUTION_PTC", "CHALLENGE_VOLUME_FIXED"]
@@ -232,6 +238,8 @@ class Validator:
         if not self.df["individual_target"].isin([True, False]).all():
             return False, "The column individual_target has incorrect values"
 
+        return True, "The column individual_target has the correct values"
+
     def validate_challenge_title_column(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
         if self.df["challenge_title"].isnull().sum() > 0:
@@ -244,6 +252,8 @@ class Validator:
         # Check if the column does not have empty values
         if self.df["challenge_title"].empty:
             return False, "The column challenge_title has empty values"
+
+        return True, "The column challenge_title has the correct values"
 
     def validate_description_column(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
@@ -258,6 +268,8 @@ class Validator:
         if self.df["description"].empty:
             return False, "The column description has empty values"
 
+        return True, "The column description has the correct values"
+
     def validate_banner_name_column(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
         if self.df["banner_name"].isnull().sum() > 0:
@@ -270,6 +282,8 @@ class Validator:
         # Check if the column does not have empty values
         if self.df["banner_name"].empty:
             return False, "The column banner_name has empty values"
+
+        return True, "The column banner_name has the correct values"
 
     def validate_quantity_columns(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
@@ -288,6 +302,8 @@ class Validator:
         if not self.df["quantity"].gt(0).all():
             return False, "The column quantity has 0 or negative values"
 
+        return True, "The column quantity has the correct values"
+
     def validate_quantity_min_columns(self) -> Tuple[bool, str]:
         # Check if the column does not have null values
         if self.df["quantity_min"].isnull().sum() > 0:
@@ -304,3 +320,10 @@ class Validator:
         # Check if the column has greater than 0 values
         if not self.df["quantity_min"].gt(0).all():
             return False, "The column quantity_min has 0 or negative values"
+
+        return True, "The column quantity_min has the correct values"
+
+# df = pd.read_csv("data.csv", sep=";", encoding="utf-8")
+# v = Validator(df)
+
+# print(v.validate_meta_sku_column())
