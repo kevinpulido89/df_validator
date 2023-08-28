@@ -304,8 +304,3 @@ class Validator:
         # Check if the column has greater than 0 values
         if not self.df["quantity_min"].gt(0).all():
             return False, "The column quantity_min has 0 or negative values"
-
-df = pd.read_csv("data.csv", sep=";", encoding="utf-8")
-v = Validator(df)
-
-print(v.validate_sku_column())
