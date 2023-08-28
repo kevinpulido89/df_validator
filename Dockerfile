@@ -1,6 +1,6 @@
 FROM python:3.9.17-slim
 
-LABEL Name=Streamlit_Frontend_8504 Version=1.0.0
+LABEL Name=Streamlit_Frontend_8080 Version=1.0.1
 
 WORKDIR /app
 
