@@ -32,6 +32,11 @@ class Validator:
         if not self.df["POCID"].str.len().ge(6).all():
             return False, "The column POCID has incorrect length values"
 
+        # if there are duplicates, return the list duplicated values
+        if self.df["POCID"].duplicated().any():
+            duplicated_values = self.df[self.df["POCID"].duplicated()]["POCID"].tolist()
+            return False, f"The column POCID has duplicates: {duplicated_values}"
+
         return True, "The column POCID has the correct values"
 
     def validate_meta_sku_column(self) -> Tuple[bool, str]:
@@ -323,7 +328,7 @@ class Validator:
 
         return True, "The column quantity_min has the correct values"
 
-# df = pd.read_csv("data.csv", sep=";", encoding="utf-8")
-# v = Validator(df)
+df = pd.read_csv("data.csv", sep=";", encoding="utf-8")
+v = Validator(df)
 
-# print(v.validate_meta_sku_column())
+print(v.validate_poc_id_column())
