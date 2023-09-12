@@ -34,7 +34,7 @@ class Validator:
 
         # if there are duplicates, return the list with duplicated values
         if self.df["POCID"].duplicated().any():
-            duplicated_values = self.df[self.df["POCID"].duplicated()]["POCID"].tolist()
+            duplicated_values = self.df[self.df["POCID"].duplicated()]["POCID"].unique()
             return False, f"The column POCID has {len(duplicated_values )} duplicates: {duplicated_values}"
 
         return True, "The column POCID has the correct values"
