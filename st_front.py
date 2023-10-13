@@ -13,103 +13,36 @@ def main():
     st.warning("Remember uploading the CSV file with `;` as separator and UTF-8 encoding.")
 
     # Add facility to upload a dataset
-    uploaded_file = st.file_uploader(":computer: Load a CSV file:", type="csv")
+    uploaded_file = st.file_uploader("💻 Load a CSV file:", type="csv")
 
     if uploaded_file is not None:
         # Read in the data, add it to the list of available datasets
-        file_name = uploaded_file.name[:-4].capitalize()
+        file_name = uploaded_file.name[:-4]
         dataset = read_csv(uploaded_file, sep=";", encoding="utf-8")
         validator = Validator(dataset)
 
-        b, msg = validator.validate_poc_id_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
+        def validate_and_show_result(condition: bool, message: str) -> None:
+            """Validate a condition and show the result in Streamlit"""
+            if condition:
+                st.success(message)
+            else:
+                st.error(message)
 
-        b, msg = validator.validate_meta_sku_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_points_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_campaign_id_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_challenge_type_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_execution_method_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_sku_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_start_date_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_end_date_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_individual_target_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_challenge_title_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_description_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_banner_name_column()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_quantity_columns()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
-
-        b, msg = validator.validate_quantity_min_columns()
-        if b:
-            st.success(msg)
-        else:
-            st.error(msg)
+        validate_and_show_result(*validator.validate_poc_id_column())
+        validate_and_show_result(*validator.validate_sku_column())
+        validate_and_show_result(*validator.validate_challenge_type_column())
+        validate_and_show_result(*validator.validate_execution_method_column())
+        validate_and_show_result(*validator.validate_individual_target_column())
+        validate_and_show_result(*validator.validate_date_column("start_date"))
+        validate_and_show_result(*validator.validate_date_column("end_date"))
+        validate_and_show_result(*validator.validate_null_nan_empty("Campaign_ID"))
+        validate_and_show_result(*validator.validate_null_nan_empty("challenge_title"))
+        validate_and_show_result(*validator.validate_null_nan_empty("description"))
+        validate_and_show_result(*validator.validate_null_nan_empty("banner_name"))
+        validate_and_show_result(*validator.validate_null_nan_empty_positive("puntos"))
+        validate_and_show_result(*validator.validate_null_nan_empty_positive("META SKU"))
+        validate_and_show_result(*validator.validate_null_nan_empty_positive("quantity"))
+        validate_and_show_result(*validator.validate_null_nan_empty_positive("quantity_min"))
 
         st.write(f"File '{file_name}' successfully analyzed. These are 5 sample rows:")
         st.dataframe(dataset.sample(5))
