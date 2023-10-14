@@ -48,7 +48,7 @@ def main():
         st.dataframe(dataset.sample(5))
 
     else:
-        st.info("Please upload a CSV file to get started.")
+        st.info("Please upload a CSV file to get started...")
         st.stop()
 
 
