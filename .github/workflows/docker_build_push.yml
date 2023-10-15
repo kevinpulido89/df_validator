@@ -55,6 +55,11 @@ jobs:
             type=semver,pattern=v{{version}}
             type=sha,prefix=,suffix=,format=short
 
+      # Echo the docker username
+      - name: Echo Docker username
+        run: echo username 🐳 ${{ secrets.DOCKER_USER }}
+
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
