@@ -29,8 +29,6 @@ jobs:
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
-        env:
-          password: ${{ secrets.KP_PASS }}
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
@@ -62,21 +60,12 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      # - name: Build & push Docker image
-      #   id: build-and-push
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     platforms: linux/amd64,linux/arm64
-      #     push: true
-      #     tags: |
-      #       user/app:latest
-      #       user/app:1.0.0
-      #       ghcr.io/user/app:latest
-      #       ghcr.io/user/app:1.0.0
+          build-args: |
+            password=${{ secrets.KP_PASS }}
+            msg=${{ secrets.KP_MSG }}

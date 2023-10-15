@@ -4,11 +4,13 @@ LABEL Name=Streamlit_Frontend_8080 Version=1.0.1
 
 WORKDIR /app
 
-ARG password
+ARG password \
+    msg
 
 ENV PYTHONDONTWRITEBYTECODE=1\
     PYTHONUNBUFFERED=1 \
-    KP_PASS=$password
+    KP_PASS=$password \
+    KP_MSG=$msg
 
 COPY requirements.txt .
 
