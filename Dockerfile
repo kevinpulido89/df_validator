@@ -1,7 +1,5 @@
 FROM python:3.9.18-slim
 
-LABEL Name=Streamlit_Frontend_8080 Version=1.0.1
-
 WORKDIR /app
 
 ARG password \
@@ -14,12 +12,11 @@ ENV PYTHONDONTWRITEBYTECODE=1\
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt
-#--no-cache-dir --upgrade
+RUN python -m pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
 EXPOSE 8080
 
-CMD ["streamlit" , "run", "st_front.py", "--server.port", "8080"]
-
-#docker build --pull --rm -f "Dockerfile" -t dfvalidator:latest "."
+CMD streamlit run st_front.py --server.port 8080
+#docker build --build-args password=no-real-pass --build-args msg=no-real-msg --pull --rm -f "Dockerfile" -t dfvalidator:latest "."
