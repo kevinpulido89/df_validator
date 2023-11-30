@@ -1,6 +1,6 @@
 """ Streamlit front-end for the Challenges Table Validator """
 import streamlit as st
-from pandas import read_csv
+from pandas import read_csv, read_excel
 
 from validator import Validator
 
@@ -13,12 +13,17 @@ def main():
     st.warning("Remember uploading the CSV file with `;` as separator and UTF-8 encoding.")
 
     # Add facility to upload a dataset
-    uploaded_file = st.file_uploader("💻 Load a CSV file:", type="csv")
+    uploaded_file = st.file_uploader("💻 Load a CSV or XLSX file:", type=["xlsx", "csv"])
 
     if uploaded_file is not None:
         # Read in the data, add it to the list of available datasets
-        file_name = uploaded_file.name[:-4]
-        dataset = read_csv(uploaded_file, sep=";", encoding="utf-8")
+        try:
+            file_name = uploaded_file.name[:-4]
+            dataset = read_csv(uploaded_file, sep=";", encoding="utf-8")
+        except UnicodeDecodeError:
+            file_name = uploaded_file.name[:-5]
+            dataset = read_excel(uploaded_file, engine="openpyxl")
+
         validator = Validator(dataset)
 
         def validate_and_show_result(condition: bool, message: str) -> None:
@@ -29,6 +34,7 @@ def main():
                 st.error(message)
 
         validate_and_show_result(*validator.validate_poc_id_column())
+        validate_and_show_result(*validator.validate_poc_id_and_banners_duplicates())
         validate_and_show_result(*validator.validate_sku_column())
         validate_and_show_result(*validator.validate_challenge_type_column())
         validate_and_show_result(*validator.validate_execution_method_column())
@@ -48,7 +54,7 @@ def main():
         st.dataframe(dataset.sample(5))
 
     else:
-        st.info("Please upload a CSV file to get started...")
+        st.info("Please upload a CSV | XLSX file to get started...")
         st.stop()
 
 

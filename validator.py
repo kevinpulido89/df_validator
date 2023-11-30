@@ -1,6 +1,7 @@
 """This module contains the class Validator, which validates the dataframes columns"""
 import json
 import re
+from logging import warning
 from typing import Tuple
 
 import pandas as pd
@@ -98,6 +99,21 @@ class Validator:
 
         return True, f"The column {col_name} has the correct values"
 
+    def validate_poc_id_and_banners_duplicates(self) -> Tuple[bool, str]:
+        """Validate that the combination of POCID and banner_name columns have duplicates."""
+
+        duplicated_values = self.df[self.df.duplicated(subset=["POCID", "banner_name"])][
+            ["POCID", "banner_name"]
+        ].values.tolist()
+
+        if duplicated_values:
+            return (
+                False,
+                f"The combination of POCID and banner_name columns has {len(duplicated_values)} duplicates",
+            )
+
+        return True, "The combination of 'POCID' & 'banner_name' dont't have duplicates"
+
     def validate_challenge_type_column(self) -> Tuple[bool, str]:
         """Validate the challenge_type column."""
         col_name = "challenge_type"
@@ -154,7 +170,36 @@ class Validator:
         return self._check_date_format(self.df[col_name], col_name)
 
 
-# df = pd.read_csv("data.csv", sep=";", encoding="utf-8")
-# v = Validator(df)
+# try:
+#     print("Reading CSV file")
+#     df = pd.read_csv("data.csv", sep=";", encoding="utf-8")
+# except (UnicodeDecodeError, FileNotFoundError):
+#     print("Reading Excel file")
+#     df = pd.read_excel("data.xlsx", engine="openpyxl")
 
-# print(v.validate_poc_id_column())
+# validator = Validator(df)
+
+
+# def validate_and_show_result(condition: bool, message: str) -> None:
+#     """Validate a condition and show the result in Streamlit"""
+#     if condition:
+#         print(message)
+#     else:
+#         warning(message)
+
+# validate_and_show_result(*validator.validate_poc_id_column())
+# validate_and_show_result(*validator.validate_poc_id_and_banners_duplicates())
+# validate_and_show_result(*validator.validate_sku_column())
+# validate_and_show_result(*validator.validate_challenge_type_column())
+# validate_and_show_result(*validator.validate_execution_method_column())
+# validate_and_show_result(*validator.validate_individual_target_column())
+# validate_and_show_result(*validator.validate_date_column("start_date"))
+# validate_and_show_result(*validator.validate_date_column("end_date"))
+# validate_and_show_result(*validator.validate_null_nan_empty("Campaign_ID"))
+# validate_and_show_result(*validator.validate_null_nan_empty("challenge_title"))
+# validate_and_show_result(*validator.validate_null_nan_empty("description"))
+# validate_and_show_result(*validator.validate_null_nan_empty("banner_name"))
+# validate_and_show_result(*validator.validate_null_nan_empty_positive("puntos"))
+# validate_and_show_result(*validator.validate_null_nan_empty_positive("META SKU"))
+# validate_and_show_result(*validator.validate_null_nan_empty_positive("quantity"))
+# validate_and_show_result(*validator.validate_null_nan_empty_positive("quantity_min"))
