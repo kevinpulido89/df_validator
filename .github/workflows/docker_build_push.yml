@@ -1,10 +1,10 @@
 name: Docker Buildx & Push
 
 on:
-  push:
-    tags: ["*"]
-    branches:
-      - "main"
+  # push:
+  #   tags: ["*"]
+  #   branches:
+  #     - "main"
   pull_request:
     branches: ["**"]
 
